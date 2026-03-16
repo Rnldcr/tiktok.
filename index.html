@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Transfer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .safe-top {
+                padding-top: env(safe-area-inset-top);
+            }
+            .safe-bottom {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .slide-down {
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .input-field {
+            transition: all 0.2s;
+            -webkit-appearance: none;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #fe2c55;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .btn-active:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen">
+
+    <!-- SCREEN 1: INPUT FORM -->
+    <div id="screen-input" class="flex flex-col min-h-screen bg-white fade-in">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 py-3 safe-top bg-white sticky top-0 z-20">
+            <button class="text-black p-2 -ml-2 btn-active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-black">Transfer</h1>
+            <button class="text-gray-400 p-2 -mr-2 btn-active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 pb-32">
+            
+            <!-- Success Banner (Green) -->
+            <div id="success-banner" class="hidden slide-down bg-green-50 border-l-4 border-green-500 rounded-lg p-4 cursor-pointer" onclick="showDetails()">
+                <p class="text-green-700 font-semibold text-sm">Money sent successfully</p>
+                <p class="text-green-600 text-xs mt-1" id="success-message">5,000.00 USD sent to @User</p>
+            </div>
+
+            <!-- Payment Method -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Payment Method</span>
+                    <button class="text-xs text-red-500 font-medium btn-active">Manage ></button>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 btn-active">
+                    <div class="flex items-center space-x-3">
+                        <!-- TikTok Logo -->
+                        <div class="w-8 h-8 bg-black rounded flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-white fill-current">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Transfer name (Username Details)</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Username Input -->
+            <div>
+                <div class="relative">
+                    <input type="text" id="username-input" placeholder="@Enter TikTok username" 
+                        class="input-field w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white"
+                        autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Limit Display -->
+            <div class="flex justify-between items-center px-1">
+                <span class="text-xs text-gray-400">Daily transfer limit (Remain/Total)</span>
+                <span class="text-xs font-medium text-gray-700" id="limit-display">8.2M / 10.0M</span>
+            </div>
+
+            <!-- Transfer Amount -->
+            <div class="bg-white border border-gray-100 rounded-xl p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <label class="text-sm text-gray-600 font-medium">Transfer amount</label>
+                    <button id="clear-amount" onclick="clearAmount()" class="hidden w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center btn-active">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg font-medium text-gray-500">USD</span>
+                        <input type="number" id="amount-input" value="" min="0" placeholder="0" inputmode="decimal"
+                            class="input-field bg-transparent text-3xl font-bold text-gray-900 focus:outline-none placeholder-gray-300 w-48" 
+                            oninput="calculateTotal()">
+                    </div>
+                    <button onclick="setMaxAmount()" class="text-xs text-red-500 font-medium border border-red-200 bg-red-50 px-3 py-1.5 rounded-full btn-active">All</button>
+                </div>
+            </div>
+
+            <!-- Estimated Amount -->
+            <div class="bg-white border border-gray-100 rounded-xl p-4">
+                <div class="mb-3">
+                    <div class="flex items-center space-x-1">
+                        <span class="text-sm text-gray-600 font-medium">Estimated amount you receive</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mb-3">
+                    <span id="display-receive" class="text-2xl font-bold text-gray-900">USD 0.00</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+                    <span class="text-xs text-gray-400">Service fee: ...</span>
+                    <span class="text-xs text-gray-400 font-medium">USD 30.00</span>
+                </div>
+            </div>
+
+            <!-- Footer Text -->
+            <p class="text-xs text-gray-400 text-center leading-relaxed px-4 pb-4">
+                For the <span class="underline">Terms of Service</span> and <span class="underline">Privacy Polity</span>. Request document, so are permitted by RFC. <span class="underline">INFO Privacy Policy</span>
+            </p>
+        </div>
+
+        <!-- Action Button -->
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white safe-bottom">
+            <button id="btn-transfer" onclick="startTransfer()" disabled 
+                class="w-full py-4 bg-gray-200 text-gray-400 font-semibold rounded-full text-base transition-all duration-300 cursor-not-allowed btn-active">
+                Transfer
+            </button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: PROCESSING -->
+    <div id="screen-processing" class="hidden fixed inset-0 bg-white z-50 flex flex-col slide-up">
+        <div class="flex-1 flex flex-col items-center justify-center pt-20 pb-10">
+            <div class="text-4xl font-bold text-gray-900 mb-2" id="proc-amount">5,000</div>
+            <div class="text-lg text-gray-400 font-medium mb-12" id="proc-receive">USD 4,970.00</div>
+            
+            <div class="relative w-10 h-10 mb-4">
+                <div class="absolute inset-0 border-2 border-red-500 rounded-full border-t-transparent spin"></div>
+            </div>
+            
+            <p class="text-sm text-gray-900 font-medium">Processing transfer...</p>
+        </div>
+
+        <div class="p-6 pb-10 safe-bottom">
+            <div class="w-full py-4 bg-gray-100 text-gray-300 font-semibold rounded-full text-base text-center">
+                Transfer
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: TRANSFER DETAILS (Picture 8) -->
+    <div id="screen-success" class="hidden fixed inset-0 bg-white z-50 flex flex-col slide-up">
+        <!-- Header -->
+        <div class="flex items-center justify-center px-4 py-3 border-b border-gray-100 relative safe-top bg-white">
+            <button onclick="goBackToTransfer()" class="absolute left-4 text-black p-2 -ml-2 btn-active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900">Transfer details</h1>
+        </div>
+
+        <div class="flex-1 overflow-y-auto no-scrollbar p-5 pb-10">
+            <!-- Top Amount Card -->
+            <div class="bg-gray-50 rounded-xl p-6 text-center mb-6 border border-gray-100">
+                <p class="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">LIVE rewards transfer to TikTok</p>
+                <h2 class="text-4xl font-bold text-gray-900" id="success-amount">USD 5,000.00</h2>
+            </div>
+
+            <!-- Status -->
+            <div class="flex items-center justify-center space-x-2 mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm font-medium text-green-600">Withdrawal completed</span>
+            </div>
+
+            <!-- Details List -->
+            <div class="space-y-4 text-sm">
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-gray-500">Payment method</span>
+                    <span class="text-gray-900 font-medium text-right" id="success-method">TikTok(@User)</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-gray-500">Service fee</span>
+                    <span class="text-gray-900 font-medium">30.00 USD</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-gray-500">Estimated amount you receive</span>
+                    <span class="text-gray-900 font-medium text-right" id="success-receive">4,970.00 USD</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-gray-500">Transfer time</span>
+                    <span class="text-gray-900 font-medium text-right" id="success-time">--</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-gray-500">Arrival time</span>
+                    <span class="text-gray-900 font-medium text-right" id="success-arrival">--</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-500">Transaction ID</span>
+                    <span class="text-gray-900 font-medium text-right" id="success-tx-id">0000000000</span>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button class="text-sm text-gray-400 font-medium btn-active">Need help?</button>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="fixed bottom-0 left-0 right-0 p-5 bg-white safe-bottom">
+            <button onclick="resetApp()" class="w-full py-4 bg-[#fe2c55] text-white font-bold rounded-full text-base btn-active shadow-lg shadow-red-200">
+                Back to Rewards
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const FEE = 30.00;
+        let dailyLimitTotal = 10000000;
+        let dailyLimitRemaining = 10000000;
+
+        const amountInput = document.getElementById('amount-input');
+        const usernameInput = document.getElementById('username-input');
+        const displayReceive = document.getElementById('display-receive');
+        const btnTransfer = document.getElementById('btn-transfer');
+        const limitDisplay = document.getElementById('limit-display');
+        const clearAmountBtn = document.getElementById('clear-amount');
+        const successBanner = document.getElementById('success-banner');
+        const successMessage = document.getElementById('success-message');
+
+        const screenInput = document.getElementById('screen-input');
+        const screenProcessing = document.getElementById('screen-processing');
+        const screenSuccess = document.getElementById('screen-success');
+
+        const successAmount = document.getElementById('success-amount');
+        const successReceive = document.getElementById('success-receive');
+        const successMethod = document.getElementById('success-method');
+        const successTime = document.getElementById('success-time');
+        const successArrival = document.getElementById('success-arrival');
+        const successTxId = document.getElementById('success-tx-id');
+        
+        const procAmount = document.getElementById('proc-amount');
+        const procReceive = document.getElementById('proc-receive');
+
+        function formatCurrency(num) {
+            return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatLimit(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            return num.toLocaleString();
+        }
+
+        function updateLimitDisplay() {
+            limitDisplay.textContent = `${formatLimit(dailyLimitRemaining)} / ${formatLimit(dailyLimitTotal)}`;
+        }
+
+        updateLimitDisplay();
+
+        function calculateTotal() {
+            let val = parseFloat(amountInput.value);
+            if (isNaN(val) || val < 0) val = 0;
+            
+            let receive = val - FEE;
+            if (receive < 0) receive = 0;
+
+            displayReceive.textContent = `USD ${formatCurrency(receive)}`;
+
+            if (val > 0) {
+                clearAmountBtn.classList.remove('hidden');
+            } else {
+                clearAmountBtn.classList.add('hidden');
+            }
+
+            const hasUsername = usernameInput.value.trim().length > 0;
+            const hasValidAmount = val > FEE;
+            const withinLimit = val <= dailyLimitRemaining;
+
+            if (hasUsername && hasValidAmount && withinLimit) {
+                btnTransfer.disabled = false;
+                btnTransfer.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+                btnTransfer.classList.add('bg-[#fe2c55]', 'text-white');
+            } else {
+                btnTransfer.disabled = true;
+                btnTransfer.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+                btnTransfer.classList.remove('bg-[#fe2c55]', 'text-white');
+            }
+        }
+
+        function clearAmount() {
+            amountInput.value = '';
+            calculateTotal();
+            amountInput.focus();
+        }
+
+        function setMaxAmount() {
+            amountInput.value = dailyLimitRemaining;
+            calculateTotal();
+            amountInput.focus();
+        }
+
+        function startTransfer() {
+            const amount = parseFloat(amountInput.value);
+            const username = usernameInput.value || "@User";
+            const receive = amount - FEE;
+
+            procAmount.textContent = amount.toLocaleString();
+            procReceive.textContent = `USD ${formatCurrency(receive)}`;
+
+            // Show Processing Screen
+            screenProcessing.classList.remove('hidden');
+
+            // Simulate Network Delay (2 seconds)
+            setTimeout(() => {
+                completeTransfer(amount, receive, username);
+            }, 2000);
+        }
+
+        function completeTransfer(amount, receive, username) {
+            // 1. Update Limit
+            dailyLimitRemaining -= amount;
+            if (dailyLimitRemaining < 0) dailyLimitRemaining = 0;
+            updateLimitDisplay();
+
+            // 2. Hide Processing
+            screenProcessing.classList.add('hidden');
+
+            // 3. Show Green Success Banner on Transfer Page
+            successMessage.textContent = `${formatCurrency(amount)} USD sent to ${username}`;
+            successBanner.classList.remove('hidden');
+
+            // 4. Store transfer data for details page
+            window.lastTransfer = {
+                amount: amount,
+                receive: receive,
+                username: username,
+                time: new Date()
+            };
+
+            // 5. Auto-redirect to Details Page after 1.5 seconds
+            setTimeout(() => {
+                showDetails();
+            }, 1500);
+        }
+
+        function showDetails() {
+            const data = window.lastTransfer;
+            if (!data) return;
+
+            screenSuccess.classList.remove('hidden');
+
+            successAmount.textContent = `USD ${formatCurrency(data.amount)}`;
+            successReceive.textContent = `${formatCurrency(data.receive)} USD`;
+            successMethod.textContent = `TikTok(${data.username})`;
+            
+            const now = data.time;
+            const arrival = new Date(now.getTime() + 2 * 60000);
+            
+            const timeStr = now.toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            const arrivalStr = arrival.toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            successTime.textContent = timeStr;
+            successArrival.textContent = arrivalStr;
+            successTxId.textContent = Math.floor(1000000000 + Math.random() * 9000000000);
+        }
+
+        function goBackToTransfer() {
+            screenSuccess.classList.add('hidden');
+        }
+
+        function resetApp() {
+            screenSuccess.classList.add('hidden');
+            screenProcessing.classList.add('hidden');
+            successBanner.classList.add('hidden');
+            
+            amountInput.value = '';
+            usernameInput.value = '';
+            displayReceive.textContent = 'USD 0.00';
+            clearAmountBtn.classList.add('hidden');
+            calculateTotal();
+        }
+
+        usernameInput.addEventListener('input', calculateTotal);
+        amountInput.addEventListener('input', calculateTotal);
+    </script>
+</body>
+</html>
+
